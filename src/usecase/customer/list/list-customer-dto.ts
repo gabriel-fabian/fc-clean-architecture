@@ -12,5 +12,5 @@ type Customer = {
 }
 
 export type OutputListCustomerDto = {
-  customer: Customer[]
+  customers: Customer[]
 }
