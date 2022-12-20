@@ -4,6 +4,21 @@ import { CustomerModel, CustomerRepository } from '@/infra/customer'
 import { mockCustomer } from '@/tests/domain/mocks'
 import { FindCustomerUseCase } from '@/usecase/customer'
 
+type SutTypes = {
+  sut: FindCustomerUseCase
+  customerRepository: CustomerRepository
+}
+
+const makeSut = (): SutTypes => {
+  const customerRepository = new CustomerRepository()
+  const sut = new FindCustomerUseCase(customerRepository)
+
+  return {
+    sut,
+    customerRepository
+  }
+}
+
 describe('FindCustomerUseCase', () => {
   let sequelize: Sequelize
 
@@ -24,8 +39,7 @@ describe('FindCustomerUseCase', () => {
   })
 
   it('should find a customer', async () => {
-    const customerRepository = new CustomerRepository()
-    const usecase = new FindCustomerUseCase(customerRepository)
+    const { sut, customerRepository } = makeSut()
     const customer = mockCustomer()
     await customerRepository.create(customer)
 
@@ -44,7 +58,7 @@ describe('FindCustomerUseCase', () => {
       }
     }
 
-    const result = await usecase.run(input)
+    const result = await sut.run(input)
 
     expect(result).toEqual(output)
   })

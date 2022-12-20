@@ -4,31 +4,44 @@ import { CustomerRepositorySpy } from '@/tests/infra/mocks'
 import { mockCustomer } from '@/tests/domain/mocks'
 import { FindCustomerUseCase } from '@/usecase/customer'
 
+type SutTypes = {
+  sut: FindCustomerUseCase
+  customerRepositorySpy: CustomerRepositorySpy
+}
+
+const makeSut = (): SutTypes => {
+  const customerRepositorySpy = new CustomerRepositorySpy()
+  const sut = new FindCustomerUseCase(customerRepositorySpy)
+
+  return {
+    sut,
+    customerRepositorySpy
+  }
+}
+
 describe('FindCustomerUseCase', () => {
   it('should call CustomerRepository', () => {
-    const customerRepositorySpy = new CustomerRepositorySpy()
-    const usecase = new FindCustomerUseCase(customerRepositorySpy)
+    const { sut, customerRepositorySpy } = makeSut()
 
     const input = {
       id: faker.datatype.uuid()
     }
 
-    usecase.run(input)
+    sut.run(input)
 
     expect(customerRepositorySpy.callsCount).toBe(1)
   })
 
-  it('should find a customer', async () => {
-    const customerRepositorySpy = new CustomerRepositorySpy()
+  it('should find a customer and return in FindCustomerDTO', async () => {
+    const { sut, customerRepositorySpy } = makeSut()
     const customer = mockCustomer()
     jest.spyOn(customerRepositorySpy, 'find').mockResolvedValueOnce(customer)
-    const usecase = new FindCustomerUseCase(customerRepositorySpy)
 
     const input = {
       id: customer.id
     }
 
-    const output = {
+    const outputDto = {
       id: customer.id,
       name: customer.name,
       address: {
@@ -39,22 +52,21 @@ describe('FindCustomerUseCase', () => {
       }
     }
 
-    const result = await usecase.run(input)
+    const result = await sut.run(input)
 
-    expect(result).toEqual(output)
+    expect(result).toEqual(outputDto)
   })
 
   it('should throw if CustomerRepository throws', async () => {
-    const customerRepositorySpy = new CustomerRepositorySpy()
+    const { sut, customerRepositorySpy } = makeSut()
     jest.spyOn(customerRepositorySpy, 'find').mockRejectedValueOnce(new Error('Customer not found'))
-    const usecase = new FindCustomerUseCase(customerRepositorySpy)
 
     const input = {
       id: faker.datatype.uuid()
     }
 
     expect(async () => {
-      return await usecase.run(input)
+      return await sut.run(input)
     }).rejects.toThrow('Customer not found')
   })
 })
