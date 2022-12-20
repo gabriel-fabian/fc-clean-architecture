@@ -56,4 +56,22 @@ describe('CreateCustomerUseCase', () => {
       ...input
     })
   })
+
+  it('should throw an error when param is missing', async () => {
+    const { sut } = makeSut()
+
+    const input = {
+      name: '',
+      address: {
+        street: faker.address.street(),
+        number: faker.datatype.number(),
+        city: faker.address.city(),
+        zipCode: faker.address.zipCode()
+      }
+    }
+
+    await expect(sut.run(input)).rejects.toThrow(
+      'Name is required'
+    )
+  })
 })
