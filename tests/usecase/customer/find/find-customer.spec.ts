@@ -43,4 +43,18 @@ describe('FindCustomerUseCase', () => {
 
     expect(result).toEqual(output)
   })
+
+  it('should throw if CustomerRepository throws', async () => {
+    const customerRepositorySpy = new CustomerRepositorySpy()
+    jest.spyOn(customerRepositorySpy, 'find').mockRejectedValueOnce(new Error('Customer not found'))
+    const usecase = new FindCustomerUseCase(customerRepositorySpy)
+
+    const input = {
+      id: faker.datatype.uuid()
+    }
+
+    expect(async () => {
+      return await usecase.run(input)
+    }).rejects.toThrow('Customer not found')
+  })
 })
