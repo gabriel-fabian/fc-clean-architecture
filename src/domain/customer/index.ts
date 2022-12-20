@@ -1,3 +1,4 @@
+export * from './factory/customer-factory'
 export { default as Address } from './value-object/address'
 export { default as Customer } from './entity/customer'
 export { default as CustomerAddressChangedEvent } from './event/customer-address-changed-event'
