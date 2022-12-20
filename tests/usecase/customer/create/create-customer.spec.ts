@@ -35,4 +35,25 @@ describe('CreateCustomerUseCase', () => {
 
     expect(customerRepositorySpy.callsCount).toBe(1)
   })
+
+  it('should return OutputCreateCustomerDto', async () => {
+    const { sut } = makeSut()
+
+    const input = {
+      name: faker.name.firstName(),
+      address: {
+        street: faker.address.street(),
+        number: faker.datatype.number(),
+        city: faker.address.city(),
+        zipCode: faker.address.zipCode()
+      }
+    }
+
+    const output = await sut.run(input)
+
+    expect(output).toEqual({
+      id: expect.any(String),
+      ...input
+    })
+  })
 })
