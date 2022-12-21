@@ -4,6 +4,6 @@ import { Product } from '@/domain/product'
 
 export const mockProduct = (): Product => new Product(
   faker.datatype.uuid(),
-  faker.datatype.string(),
+  faker.commerce.productName(),
   faker.datatype.number()
 )
