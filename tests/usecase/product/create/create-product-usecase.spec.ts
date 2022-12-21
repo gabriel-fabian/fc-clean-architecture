@@ -47,4 +47,17 @@ describe('CreateProductUseCase', () => {
       ...inputDto
     })
   })
+
+  it('should throw if param is missing', async () => {
+    const { sut } = makeSut()
+
+    const input = {
+      name: '',
+      price: faker.datatype.number()
+    }
+
+    expect(async () => {
+      return await sut.run(input)
+    }).rejects.toThrow('Name is required')
+  })
 })
