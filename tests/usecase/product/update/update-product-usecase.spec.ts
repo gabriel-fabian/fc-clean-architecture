@@ -34,6 +34,18 @@ describe('UpdateProductUseCase', () => {
 
     await sut.run(inputDto)
 
-    expect(productRepositorySpy.callsCount).toBe(1)
+    expect(productRepositorySpy.callsCount).toBe(2)
+  })
+
+  it('should return an OutputUpdateProductDto', async () => {
+    const { sut, productRepositorySpy } = makeSut()
+    const product = mockProduct()
+    const inputDto = makeInputDto(product)
+
+    jest.spyOn(productRepositorySpy, 'find').mockResolvedValueOnce(product)
+
+    const result = await sut.run(inputDto)
+
+    expect(result).toEqual(inputDto)
   })
 })
