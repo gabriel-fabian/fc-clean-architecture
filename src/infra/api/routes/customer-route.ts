@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 
 import { CustomerRepository } from '@/infra/customer'
-import { CreateCustomerUseCase } from '@/usecase/customer'
+import { CreateCustomerUseCase, ListCustomerUseCase } from '@/usecase/customer'
 
 export const customerRoute = express.Router()
 
@@ -9,7 +9,6 @@ export const customerRoute = express.Router()
 customerRoute.post('/', async (req: Request, res: Response) => {
   const usecase = new CreateCustomerUseCase(new CustomerRepository())
 
-  console.log(req.body)
   try {
     const customerDto = {
       name: req.body.name,
@@ -22,6 +21,19 @@ customerRoute.post('/', async (req: Request, res: Response) => {
     }
 
     const output = await usecase.run(customerDto)
+    res.send(output)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+customerRoute.get('/', async (_req: Request, res: Response) => {
+  const usecase = new ListCustomerUseCase(new CustomerRepository())
+
+  try {
+    const output = await usecase.run()
+
     res.send(output)
   } catch (err) {
     res.status(500).json(err)
