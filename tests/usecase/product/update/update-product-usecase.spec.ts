@@ -30,9 +30,8 @@ const makeSut = (): SutTypes => {
 describe('UpdateProductUseCase', () => {
   it('should call CustomerRepository', async () => {
     const { sut, productRepositorySpy } = makeSut()
-    const inputDto = makeInputDto()
 
-    await sut.run(inputDto)
+    await sut.run(makeInputDto())
 
     expect(productRepositorySpy.callsCount).toBe(2)
   })
@@ -47,5 +46,14 @@ describe('UpdateProductUseCase', () => {
     const result = await sut.run(inputDto)
 
     expect(result).toEqual(inputDto)
+  })
+
+  it('should throw if ProductRepository throws', async () => {
+    const { sut, productRepositorySpy } = makeSut()
+    jest.spyOn(productRepositorySpy, 'find').mockRejectedValueOnce(new Error('Product not found'))
+
+    expect(async () => {
+      return await sut.run(makeInputDto())
+    }).rejects.toThrow('Product not found')
   })
 })
