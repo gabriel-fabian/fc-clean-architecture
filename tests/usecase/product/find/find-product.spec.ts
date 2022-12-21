@@ -51,4 +51,17 @@ describe('FindProductUseCase', () => {
 
     expect(result).toEqual(outputDto)
   })
+
+  it('should throw if ProductRepository throws', async () => {
+    const { sut, productRepositorySpy } = makeSut()
+    jest.spyOn(productRepositorySpy, 'find').mockRejectedValueOnce(new Error('Product not found'))
+
+    const input = {
+      id: faker.datatype.uuid()
+    }
+
+    expect(async () => {
+      return await sut.run(input)
+    }).rejects.toThrow('Product not found')
+  })
 })
