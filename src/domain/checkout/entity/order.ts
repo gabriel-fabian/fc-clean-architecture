@@ -4,13 +4,11 @@ export default class Order {
   private readonly _id: string
   private readonly _customer_id: string
   private readonly _items: OrderItem[] = []
-  private readonly _total: number
 
   constructor (id: string, customerId: string, items: OrderItem[]) {
     this._id = id
     this._customer_id = customerId
     this._items = items
-    this._total = this.total()
 
     this.validate()
   }
