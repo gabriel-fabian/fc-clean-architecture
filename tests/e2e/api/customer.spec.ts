@@ -37,4 +37,14 @@ describe('Customer E2E', () => {
     expect(response.body.address.number).toBe(number)
     expect(response.body.address.zipCode).toBe(zipCode)
   })
+
+  it('should return 500 if params is invalid', async () => {
+    const response = await request(app)
+      .post('/customer')
+      .send({
+        name: faker.name.firstName()
+      })
+
+    expect(response.status).toBe(500)
+  })
 })
