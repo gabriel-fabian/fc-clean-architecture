@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 
 import { FindProductUseCase } from '@/usecase/product'
 import { ProductRepositorySpy } from '@/tests/infra/mocks/mock-product-repository'
+import { mockProduct } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: FindProductUseCase
@@ -29,5 +30,25 @@ describe('FindProductUseCase', () => {
     sut.run(input)
 
     expect(productRepositorySpy.callsCount).toBe(1)
+  })
+
+  it('should find a product and return an OutputFindProductDto', async () => {
+    const { sut, productRepositorySpy } = makeSut()
+    const product = mockProduct()
+    jest.spyOn(productRepositorySpy, 'find').mockResolvedValueOnce(product)
+
+    const input = {
+      id: product.id
+    }
+
+    const outputDto = {
+      id: product.id,
+      name: product.name,
+      price: product.price
+    }
+
+    const result = await sut.run(input)
+
+    expect(result).toEqual(outputDto)
   })
 })
