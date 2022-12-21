@@ -31,4 +31,20 @@ describe('CreateProductUseCase', () => {
 
     expect(productRepositorySpy.callsCount).toBe(1)
   })
+
+  it('should create a product and return an OutputCreateProductDto', async () => {
+    const { sut } = makeSut()
+
+    const inputDto = {
+      name: faker.commerce.productName(),
+      price: faker.datatype.number()
+    }
+
+    const output = await sut.run(inputDto)
+
+    expect(output).toEqual({
+      id: expect.any(String),
+      ...inputDto
+    })
+  })
 })
