@@ -1,4 +1,4 @@
-import { Notification } from '@/domain/@shared/notification/notification'
+import { Notification } from '@/domain/@shared/notification'
 
 describe('Notification Unit Test', () => {
   it('should create errors', () => {
