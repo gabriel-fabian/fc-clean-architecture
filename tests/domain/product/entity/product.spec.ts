@@ -5,19 +5,25 @@ describe('Product unit tests', () => {
   it('should throw error when id is empty', () => {
     expect(() => {
       void new Product('', faker.datatype.string(), faker.datatype.number())
-    }).toThrowError('Id is required')
+    }).toThrowError('product: Id is required')
   })
 
   it('should throw error when name is empty', () => {
     expect(() => {
       void new Product(faker.datatype.uuid(), '', faker.datatype.number())
-    }).toThrowError('Name is required')
+    }).toThrowError('product: Name is required')
   })
 
   it('should throw error when price is less than zero', () => {
     expect(() => {
       void new Product(faker.datatype.uuid(), faker.datatype.string(), -1)
-    }).toThrowError('Price must be valid')
+    }).toThrowError('product: Price must be valid')
+  })
+
+  it('should throw error when all params are invalid', () => {
+    expect(() => {
+      void new Product('', '', 0)
+    }).toThrowError('product: Id is required,product: Name is required,product: Price must be valid')
   })
 
   it('should change name', () => {
